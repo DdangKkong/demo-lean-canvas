@@ -2,6 +2,7 @@ import React from 'react';
 import { FaTrash } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
+// Home 화면에서 각 Canvas를 출력, id,title,lastModified,category 정보를 보여줌
 function CanvasItem({ id, title, lastModified, category, onDelete }) {
   return (
     <Link
@@ -18,9 +19,13 @@ function CanvasItem({ id, title, lastModified, category, onDelete }) {
         </span>
       </div>
       <button
-        className="absolute top-2 right-2 p-2 text-red-500 rounded-full"
+        className="absolute text-red-500 top-2 right-2 p-2 rounded-full"
         aria-label="Delete"
-        onClick={onDelete}
+        onClick={e => {
+          e.stopPropagation();
+          e.preventDefault();
+          onDelete(id);
+        }}
       >
         <FaTrash />
       </button>

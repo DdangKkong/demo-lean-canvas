@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaList, FaTh } from 'react-icons/fa';
 
+// Home 화면에서 canvas들을 list형태로 볼건지 icon형태로 볼건지 선택할 수 있게 해줌
 function ViewToggle({ isGridView, setIsGridView }) {
   return (
     <div className="flex space-x-2">

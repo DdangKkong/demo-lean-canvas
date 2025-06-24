@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { AiOutlineClose, AiOutlineCheck } from 'react-icons/ai';
 
+// Canvas 화면에서 Note 정보 보여줌, id,content,color, Note 생성시 랜덤색상(randomIndex), Note의 content 작성시 줄 넘어가면 height 길어지게 설정 (스크롤X)
 const Note = ({
+  // Note 객체를 구성하는 항목들, onUpdateNote, onRemoveNote
   id,
   content,
   color: initalColor,
@@ -9,7 +11,6 @@ const Note = ({
   onRemoveNote,
 }) => {
   const [localContent, setLocalContent] = useState(content);
-
   const colorOptions = [
     'bg-yellow-300',
     'bg-pink-300',
@@ -17,6 +18,7 @@ const Note = ({
     'bg-green-300',
   ];
 
+  // Note의 색상 설정, Note 생성시 랜덤색상(randomIndex)
   const [color, setColor] = useState(() => {
     if (initalColor) return initalColor;
     const randomIndex = Math.floor(Math.random() * colorOptions.length);
@@ -25,6 +27,7 @@ const Note = ({
 
   const [isEditing, setIsEditing] = useState(false);
 
+  // Note의 content 작성시 줄 넘어가면 height 길어지게 설정 (스크롤X)
   const textareaRef = useRef(null);
   useEffect(() => {
     if (textareaRef.current) {
@@ -32,12 +35,14 @@ const Note = ({
       textareaRef.current.style.height =
         textareaRef.current.scrollHeight + 'px';
     }
-  }, [content]);
+  }, [localContent]);
 
+  // Note의 content 수정
   const handleContentChange = () => {
     onUpdateNote(id, localContent, color);
   };
 
+  // Note의 color 수정
   const handleColorChange = newColor => {
     setColor(newColor);
     onUpdateNote(id, content, newColor);

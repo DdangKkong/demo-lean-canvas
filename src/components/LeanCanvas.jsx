@@ -1,5 +1,8 @@
 import CanvasCard from './CanvasCard';
+
+// Canvas 화면에서 Canvas 세부내용을 보여줌(1.문제, 4.해결안, 3.가치제안~~~), CanvasCard적용
 function LeanCanvas({ canvas, onCanvasChange }) {
+  // canvas의 notes가 수정될때, 수정된 canvas 전달
   const handleNotesChange = (section, updatedNotes) => {
     const updatedCanvas = {
       ...canvas,
@@ -38,6 +41,7 @@ function LeanCanvas({ canvas, onCanvasChange }) {
         />
         <CanvasCard
           title={'기존 대안'}
+          // 타이틀을 다른 형식으로 표현
           isSubtitle
           notes={canvas.existingAlternatives?.notes}
           onNotesChange={notes =>

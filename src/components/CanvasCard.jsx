@@ -3,7 +3,9 @@ import { FaPlus } from 'react-icons/fa';
 import Note from './Note';
 import { v4 as uuidv4 } from 'uuid';
 
+// Canvas 내부의 Note CUD, Note사용
 function CanvasCard({ title, isSubtitle = false, notes = [], onNotesChange }) {
+  // Note 생성, onNotesChange 사용
   const handleAddNote = () => {
     const newNote = {
       id: uuidv4(),
@@ -12,9 +14,11 @@ function CanvasCard({ title, isSubtitle = false, notes = [], onNotesChange }) {
     };
     onNotesChange([...notes, newNote]);
   };
+  // Note 삭제, onNotesChange 사용
   const handleRemoveNote = id => {
     onNotesChange(notes.filter(note => note.id !== id));
   };
+  // Note 수정, onNotesChange 사용
   const handleUpdateNote = (id, content, color) => {
     onNotesChange(
       notes.map(note => (note.id === id ? { ...note, content, color } : note)),

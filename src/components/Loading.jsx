@@ -1,5 +1,6 @@
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
+// 로딩시 로딩화면
 function Loading() {
   return (
     <div className="flex items-center justify-center ">

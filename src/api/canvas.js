@@ -10,7 +10,7 @@ export async function getCanvases(params) {
     },
     params,
   );
-  const { data } = await canvases.get('/', { params: payload });
+  const data = await canvases.get('/', { params: payload });
   return data;
 }
 

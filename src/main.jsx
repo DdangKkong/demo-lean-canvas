@@ -13,6 +13,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 // import App from './AppTailwindCSS.jsx';
 
 const queryClient = new QueryClient();
+// 각 경로별 라우팅 설정
 const router = createBrowserRouter([
   {
     path: '/',

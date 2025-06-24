@@ -1,70 +1,80 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { FaSearch, FaList, FaTh } from 'react-icons/fa';
-import CanvasItem from '../components/CanvasItem';
+import { createCanvas, deleteCanvas, getCanvases } from '../api/canvas';
+
 import CanvasList from '../components/CanvasList';
 import SearchBar from '../components/SearchBar';
 import ViewToggle from '../components/ViewToggle';
-import axios from 'axios';
-import { createCanvas, deleteCanvas, getCanvases } from '../api/canvas';
 import Loading from '../components/Loading';
 import Error from '../components/Error';
 import Button from '../components/Button';
-import useApiRequest from '../hooks/useApiRequest';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import CategoryFilter from '../components/CategoryFilter';
 
+// 홈화면, SearchBar,CategoryFilter,ViewToggle,Button,Loading,Error,CanvasList 적용, canvas 수정을 제외한 기능 구현
 function Home() {
+  const [isGridView, setIsGridView] = useState(true);
+  const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // 카테고리 필터 CategoryFilter 적용
   const [filter, setFilter] = useState({
     searchText: undefined,
     category: undefined,
   });
-  const handleFilter = (key, value) =>
+  const handleFilter = (key, value) => {
     setFilter({
       ...filter,
       [key]: value,
     });
-  const [isGridView, setIsGridView] = useState(true);
+  };
+  useEffect(() => {
+    fetchData();
+  }, [filter]);
 
-  const queryClient = useQueryClient();
-
-  // 1] 데이터 조회
-  const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ['canvases', filter.searchText, filter.category],
-    queryFn: () => {
-      return getCanvases({
+  // canvases List 조회 (홈화면), setTimeout 걸어주기
+  async function fetchData() {
+    try {
+      setIsLoading(true);
+      setError(null);
+      await new Promise(resolver => setTimeout(resolver, 500));
+      const response = await getCanvases({
         title_like: filter.searchText,
         category: filter.category,
       });
-    },
-    // initialData: [],
-    staleTime: 1000 * 60 * 5, // 5분 동안 데이터가 신선한(fresh) 상태로 유지
-    refetchOnWindowFocus: false,
-  });
+      setData(response.data);
+    } catch (err) {
+      setError(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
-  // 2] 등록
-  const { mutate: createNewCanvas, isLoading: isLoadingCreate } = useMutation({
-    mutationFn: createCanvas,
-    onSuccess: () => queryClient.invalidateQueries(['canvases']),
-    onError: err => alert(err.message),
-  });
-
-  // 3] 삭제
-  const { mutate: deleteCanvasMutation } = useMutation({
-    mutationFn: deleteCanvas,
-    onSuccess: () => queryClient.invalidateQueries(['canvases']),
-    onError: err => alert(err.message),
-  });
-
+  // canvas 삭제, '삭제 하시겠습니까?'
   const handleDeleteItem = async id => {
-    // if (confirm('삭제 하시겠습니까?') === false) {
-    //   return;
-    // }
-    deleteCanvasMutation(id);
+    if (confirm('삭제 하시겠습니까?') === false) {
+      return;
+    }
+    try {
+      await deleteCanvas(id);
+      fetchData();
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
+  // canvas 생성, setTimeout 걸어주기
+  const [isLoadingCreate, setIsLoadingCreate] = useState(false);
   const handleCreateCanvas = async () => {
-    createNewCanvas();
+    try {
+      setIsLoadingCreate(true);
+      await new Promise(resolver => setTimeout(resolver, 500));
+      await createCanvas();
+      fetchData();
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setIsLoadingCreate(false);
+    }
   };
 
   return (
@@ -88,7 +98,12 @@ function Home() {
         </Button>
       </div>
       {isLoading && <Loading />}
-      {error && <Error message={error.message} onRetry={refetch} />}
+      {error && (
+        <Error
+          message={error.message}
+          onRetry={() => fetchData({ title_like: searchText })}
+        />
+      )}
       {!isLoading && !error && (
         <CanvasList
           filteredData={data}

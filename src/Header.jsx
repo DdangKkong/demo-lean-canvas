@@ -10,6 +10,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import Button from './components/Button';
 
 function Header() {
+  // 헤더에 Home, About, Contact 3가지 탭 만들기
   const navItems = [
     { id: 'home', label: 'Home', icon: <FaHome />, to: '/' },
     { id: 'about', label: 'About', icon: <FaInfoCircle />, to: '/about' },

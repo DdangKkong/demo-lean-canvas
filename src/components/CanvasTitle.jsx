@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { FaCheck, FaEdit } from 'react-icons/fa';
 
+// Canvas 세부화면에서 Title부분, 수정시 화면 다르게 구성, 수정화면에서 초록색 체크버튼 클릭시 수정내용 적용
 function CanvasTitle({ value, onChange }) {
   const [title, setTitle] = useState(value);
   useEffect(() => {
@@ -8,6 +9,7 @@ function CanvasTitle({ value, onChange }) {
   }, [value]);
   const [isEditing, setIsEditing] = useState(false);
 
+  // canvas Title 수정화면에서 초록색 체크버튼 클릭시 수정내용 적용
   const handleDoneTitle = () => {
     setIsEditing(false);
     onChange(title);

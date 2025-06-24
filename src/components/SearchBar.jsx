@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
 
+// Home 화면에서 검색창
 function SearchBar({ searchText = '', onSearch }) {
   const [localSearchText, setLocalSearchText] = useState(searchText);
   return (
@@ -8,7 +9,7 @@ function SearchBar({ searchText = '', onSearch }) {
       <input
         type="text"
         placeholder="검색"
-        className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full pr-4 pl-10 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         value={localSearchText}
         onChange={e => setLocalSearchText(e.target.value)}
         onKeyDown={e => {
